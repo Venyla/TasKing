@@ -4,6 +4,11 @@
 *.dll
 *.so
 *.dylib
+infrastructure/ssl/*
+*.env
+.idea/
+.DS_Store
+env-config.js
 
 # Test binary, built with `go test -c`
 *.test
