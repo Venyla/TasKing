@@ -2,17 +2,26 @@
 
 ## API
 
-Return all tasks
+**Return all task:**
+
 GET: `/api/tasks`
 
-Return task by id
+**Return task by id:**
+
 GET: `/api/tasks/{task-id}`
 
-Return all task histories
+**Return rankings of a task:**
+
+GET: `/api/tasks/{task-id}/ranking`
+
+**Return all task histories:**
+
 GET: `/api/history/{task-id}`
 
-Save task
+**Save task:**
+
 POST: `/api/tasks`
 
-Save history entry
+**Save history entry:**
+
 POST: `/api/history`
