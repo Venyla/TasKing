@@ -147,24 +147,13 @@ function updateKingStatus(id, myCount, maxCount) {
 }
 function getTasks() {
     return __awaiter(this, void 0, void 0, function () {
-        var response, endpointTasks;
+        var response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, fetch(ENDPOINT + '/api/tasks')];
                 case 1:
                     response = _a.sent();
-                    return [4 /*yield*/, response.json()];
-                case 2:
-                    endpointTasks = _a.sent();
-                    return [2 /*return*/, endpointTasks.map(function (t) {
-                            return {
-                                id: t.id,
-                                title: t.Title,
-                                image_url: t.IconUrl,
-                                x: t.XCoordinates,
-                                y: t.YCoordinates
-                            };
-                        })];
+                    return [2 /*return*/, response.json()];
             }
         });
     });
@@ -181,9 +170,8 @@ function postHistory(id) {
             switch (_a.label) {
                 case 0:
                     data = {
-                        id: undefined,
-                        TaskId: id,
-                        CreatedBy: username
+                        task_id: id,
+                        username_of_creator: username
                     };
                     return [4 /*yield*/, fetch("".concat(ENDPOINT, "/api/history"), {
                             method: 'POST',

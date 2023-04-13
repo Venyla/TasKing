@@ -119,16 +119,7 @@ function updateKingStatus(id: string, myCount: number, maxCount: number) {
 
 async function getTasks(): Promise<Task[]> {
     const response = await fetch(ENDPOINT + '/api/tasks');
-    const endpointTasks = await response.json();
-    return endpointTasks.map(t => {
-        return {
-            id: t.id,
-            title: t.Title,
-            image_url: t.IconUrl,
-            x: t.XCoordinates,
-            y: t.YCoordinates,
-        }
-    });
+    return response.json();
 }
 
 function htmlToElement(html: string) {
@@ -138,10 +129,9 @@ function htmlToElement(html: string) {
 }
 
 async function postHistory(id: string) {
-    const data = {
-        id: undefined,
-        TaskId: id,
-        CreatedBy: username,
+    const data: TaskHistory = {
+        task_id: id,
+        username_of_creator: username,
     }
     const response = await fetch(`${ENDPOINT}/api/history`, {
         method: 'POST',
@@ -158,8 +148,7 @@ interface Task {
 }
 
 interface TaskHistory {
-    id: number,
-    task_id: number,
+    task_id: string,
     username_of_creator: string
 }
 
