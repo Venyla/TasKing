@@ -2,25 +2,34 @@ const usernameInput = document.querySelector('#username-input') as HTMLInputElem
 const usernameDisplay = document.querySelector('#username-display')
 const usernameModal = document.querySelector('.username-modal')
 const taskList = document.querySelector('.tasks');
-const tasks = getTasks();
 let username = localStorage.getItem("username");
 
-function fillTaskList() {
-    for (const task of tasks) {
-        const html = `
-            <li id="task-${task.id}" style="top: ${task.x}%; left: ${task.y}%; background-image: url(${task.image_url});" onclick="updateMyCount(${task.id}, this)">
-                <img class="crown" src="../assets/crown-solid.svg" alt="A Crown"/>
-                <div class="counter">
-                    <span class="my-count">0</span>
-                    <span class="their-count">0</span>
-                </div>
-                <div class="title">
-                    ${task.title}
-                </div>
-            </li>`;
+const taskElements = new Map<string, Element>;
 
-        taskList.insertAdjacentHTML('beforeend', html);
-    }
+const ENDPOINT = 'http://127.0.0.1:8080';
+
+function fillTaskList() {
+    getTasks().then(tasks => {
+        tasks.forEach(task => {
+            const html = `
+                <li id="t-${task.id}" style="top: ${task.x}%; left: ${task.y}%; background-image: url(${task.image_url});" onclick="updateMyCount('${task.id}')" data-current-max="0">
+                    <img class="crown" src="../assets/crown-solid.svg" alt="A Crown"/>
+                    <div class="counter">
+                        <span class="my-count">0</span>
+                        <span class="their-count">0</span>
+                    </div>
+                    <div class="title">
+                        ${task.title}
+                    </div>
+                    <ol class="ranking"></ol>
+                </li>`;
+
+            const element = htmlToElement(html);
+            taskList.insertAdjacentElement('beforeend', element)
+            taskElements[task.id] = element
+        })
+    })
+    updateRankings()
 }
 
 function showUsernameOrPrompt() {
@@ -39,68 +48,109 @@ function saveUsername(){
 }
 
 function initUglyPolling() {
-    // setInterval(updateTheirCount,5000);
+    // setInterval(updateRankings,5000);
 }
 
 fillTaskList();
 initUglyPolling();
 showUsernameOrPrompt();
 
-function updateMyCount(id: number, caller: Element) {
-    const counter = caller.querySelector('.my-count');
-    counter.innerHTML = String(+counter.innerHTML + 1);
-    updateKingStatus(caller);
-    postHistory();
+function updateMyCount(id: string) {
+    postHistory(id).then(() =>
+        updateRanking(id)
+    );
 }
 
 
-function updateTheirCount() {
-    for (const task of tasks){
-        const random = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
-        const counter = document.querySelector(`#task-${task.id} .their-count`);
-        counter.innerHTML = String(+counter.innerHTML + random);
-        
-        // getHistory(task.id);
-    }
+function updateRankings() {
+    getTasks().then(tasks => {
+        tasks.forEach(task => {
+            updateRanking(task.id)
+        })
+    });
 }
 
-function updateKingStatus(element: Element) {
-    const myCount = +element.querySelector('.my-count').innerHTML;
-    const theirCount = +element.querySelector(`.their-count`).innerHTML;
-    if(myCount > theirCount) {
-        element.classList.add('king');
-    } else {
-        element.classList.remove('king');
-    }
-}
-
-
-function getTasks(): Task[]  {
-
-    return [
-        {
-           id: 1,
-           x: 43,
-           y: 51,
-           title: 'Pet Elvis',
-           image_url: 'https://scontent.fzrh3-1.fna.fbcdn.net/v/t39.30808-6/309430860_474589338041453_5993993981776996852_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=7Tkot0fTAsoAX-FYOaX&_nc_ht=scontent.fzrh3-1.fna&oh=00_AfAsy-DH7-AJZmeKHnIMzUDN24XHC4BrAXHZ-SXf_ys_Kg&oe=643AC639'
-        },
-        {
-            id: 2,
-            x: 20,
-            y: 35,
-            title: 'Drink Beer',
-            image_url: 'https://imageresizer.static9.net.au/mAbtmTO6BX05IdEILplNAgXv_Wc=/1200x675/https%3A%2F%2Fprod.static9.net.au%2Ffs%2Fff4238d6-65e7-4f73-afa2-537d3f64378e'
+async function getRankings(id: string) {
+    const response = await fetch(`${ENDPOINT}/api/tasks/${id}/rankings`);
+    const endpointRankings = await response.json();
+    const rankings: Ranking[] = Object.keys(endpointRankings).map(value => {
+        return {
+            username_of_creator: value,
+            amount: +endpointRankings[value]
         }
-    ]
+    })
+    rankings.sort((a, b) => b.amount - a.amount);
+    return rankings
 }
 
-function postHistory() {
+function updateRankingDisplay(id: string, myCount: number, maxCount: number, rankings: Ranking[]) {
+    const rankingElement = taskElements[id].querySelector('.ranking')
+    rankingElement.innerHTML = '';
+    rankings.slice(0, 3).forEach(t =>{
+        const html = `<li><span class="count">${t.amount}</span>${t.username_of_creator}</li>`
+        rankingElement.insertAdjacentHTML('beforeend', html)
+    });
+    taskElements[id].querySelector('.my-count').innerHTML = myCount;
+    taskElements[id].dataset.currentMax = maxCount;
 
+    const index = rankings.findIndex(r => r.username_of_creator == username);
+    taskElements[id].querySelector('.their-count').innerHTML = '#' + (index + 1);
+}
+
+async function updateRanking(id: string) {
+
+    const rankings = await getRankings(id);
+    const myRanking = rankings.find(value => value.username_of_creator === username);
+
+    const maxCount = Math.max(...rankings.map(value => value.amount));
+    const myCount = myRanking != undefined ? myRanking.amount : 0;
+
+    updateRankingDisplay(id, myCount, maxCount, rankings);
+    updateKingStatus(id, myCount, maxCount);
+}
+
+function updateKingStatus(id: string, myCount: number, maxCount: number) {
+    if(myCount > 0 && myCount >= maxCount) {
+        taskElements[id].classList.add('king');
+    } else {
+        taskElements[id].classList.remove('king');
+    }
+}
+
+async function getTasks(): Promise<Task[]> {
+    const response = await fetch(ENDPOINT + '/api/tasks');
+    const endpointTasks = await response.json();
+    return endpointTasks.map(t => {
+        return {
+            id: t.id,
+            title: t.Title,
+            image_url: t.IconUrl,
+            x: t.XCoordinates,
+            y: t.YCoordinates,
+        }
+    });
+}
+
+function htmlToElement(html: string) {
+    const template = document.createElement('template');
+    template.innerHTML = html.trim();
+    return  template.content.firstElementChild;
+}
+
+async function postHistory(id: string) {
+    const data = {
+        id: undefined,
+        TaskId: id,
+        CreatedBy: username,
+    }
+    const response = await fetch(`${ENDPOINT}/api/history`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+    });
 }
 
 interface Task {
-    id: number,
+    id: string,
     x: number,
     y: number,
     title: string,
@@ -115,5 +165,6 @@ interface TaskHistory {
 
 interface Ranking {
     username_of_creator: string,
-    rank: number,
+    amount: number,
 }
+
