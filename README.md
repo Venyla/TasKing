@@ -1,4 +1,6 @@
-# TasKing
+# Welcome to TasKing
+## Infastructure
+![Infrastructure overview](https://github.com/Venyla/TasKing/blob/main/doc/TasKing.drawio.png)
 
 ## API
 
@@ -25,3 +27,6 @@ POST: `/api/tasks`
 **Save history entry:**
 
 POST: `/api/history`
+
+## Author
+👤 Vina Zahnd, Vanessa Gyger, Lukas Messmer
