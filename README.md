@@ -14,7 +14,7 @@ GET: `/api/tasks/{task-id}`
 
 **Return rankings of a task:**
 
-GET: `/api/tasks/{task-id}/ranking`
+GET: `/api/tasks/{task-id}/rankings`
 
 **Return all task histories:**
 
