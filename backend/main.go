@@ -1,20 +1,27 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"webservice/controller"
+	"webservice/data"
+	"webservice/web"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/api/tasks", controller.GetTasks)
-	router.GET("/api/tasks/:id", controller.GetTaskById)
-	router.GET("/api/tasks/:id/rankings", controller.GetRankingsByTaskId)
-	router.POST("/api/tasks", controller.PostTask)
+	err := data.Init()
+	if err != nil {
+		panic(err)
+	}
 
-	router.GET("/api/history", controller.GetTaskHistories)
-	router.GET("/api/history/:id", controller.GetTaskHistories)
-	router.POST("/api/history", controller.PostTaskHistory)
+	web.Serve()
 
-	router.Run("localhost:8080")
+	//router := gin.Default()
+	//router.GET("/api/tasks", controller.TaskController.GetTasks)
+	//router.GET("/api/tasks/:id", controller.GetTaskById)
+	//router.GET("/api/tasks/:id/rankings", controller.GetRankingsByTaskId)
+	//router.POST("/api/tasks", controller.PostTask)
+	//
+	//router.GET("/api/history", controller.GetTaskHistories)
+	//router.GET("/api/history/:id", controller.GetTaskHistories)
+	//router.POST("/api/history", controller.PostTaskHistory)
+	//
+	//router.Run("localhost:8080")
 }

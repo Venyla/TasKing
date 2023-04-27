@@ -2,6 +2,13 @@
 ## Infastructure
 ![Infrastructure overview](https://github.com/Venyla/TasKing/blob/main/doc/TasKing.drawio.png)
 
+## Running Locally
+
+```
+# Running
+docker compose up -d
+```
+
 ## API
 
 **Return all task:**
