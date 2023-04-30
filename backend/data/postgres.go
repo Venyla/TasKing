@@ -5,14 +5,15 @@ import (
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
 	"github.com/google/uuid"
-	"os"
 	dataModels "webservice/data/dataModels"
 )
 
 var db *pg.DB
 
 func Init() error {
-	opt, err := pg.ParseURL(os.Getenv("DATABASE_URL"))
+	url := "postgres://tasking_user:tasking_password@database:5432/tasking_database?sslmode=disable"
+	//opt, err := pg.ParseURL(os.Getenv("DATABASE_URL"))
+	opt, err := pg.ParseURL(url)
 	if err != nil {
 		panic(err)
 	}

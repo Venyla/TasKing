@@ -1,12 +1,11 @@
 version: '1'
 services:
-  web:
-    image: 'frontend'
-    build: .
-    depends_on:
-      - db
+  #web:
+   # build: 'frontend'
+    #depends_on:
+     # - database
 
-  db:
+  database:
     image: 'postgres:latest'
     restart: always
     env_file:
@@ -15,12 +14,12 @@ services:
       - 'db-data:/var/lib/postgresql/data'
 
   backend:
-    image: 'backend'
+    build: 'backend'
     restart: always
     env_file:
       - backend.env
     depends_on:
-      - db
+      - database
 
   loadbalancer:
     image: traefik
@@ -29,14 +28,14 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
     networks:
       - backend
-      - frontend
+      #- frontend
       - loadbalancer
 
 networks:
   loadbalancer:
-  frontend:
+  #frontend:
   backend:
-  db:
+  database:
 
 volumes:
   db-data:
