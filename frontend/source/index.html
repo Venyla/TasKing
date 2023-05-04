@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TasKing</title>
+    <link rel="stylesheet" href="default-theme.css" type="text/css">
+    <script type="text/javascript" src="scripts.js" defer></script>
+</head>
+<body>
+
+    <header class="container">
+        <h1>TasKing <span class="smaller">DSy-Project</span></h1>
+        <p class="username">Willkommen, <span id="username-display">Du</span>!</p>
+    </header>
+
+    <main>
+        <img src="../assets/map.jpg">
+        <ul class="tasks"></ul>
+    </main>
+
+    <section class="overlay username-modal hidden">
+        <div class="container">
+            <h2>Willkommen!</h2>
+            <p>Gib deinen Namen an:</p>
+            <input id="username-input" placeholder="Name">
+            <button onclick="saveUsername()">Save</button>
+        </div>
+    </section>
+
+</body>
+</html>
