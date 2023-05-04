@@ -1,9 +1,11 @@
 version: '1'
 services:
-  #web:
-    #build: 'frontend'
-    #depends_on:
-      #- database
+  web:
+    build: 'frontend'
+    depends_on:
+      - backend
+    ports:
+      - 2022:2022
 
   database:
     image: 'postgres:latest'
@@ -24,10 +26,18 @@ services:
       - database
 
   loadbalancer:
-    image: traefik
+    image: traefik:v2.9
     restart: always
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      #- './traefik.yml:/etc/traefik/traefik.yml'
+      - './traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml'
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+      - "2022:2022"
+
 #    networks:
 #      - backend
 #      - frontend
