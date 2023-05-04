@@ -40,7 +40,7 @@ var usernameModal = document.querySelector('.username-modal');
 var taskList = document.querySelector('.tasks');
 var username = localStorage.getItem("username");
 var taskElements = new Map;
-var ENDPOINT = 'http://127.0.0.1:8080';
+var ENDPOINT = 'http://backend:8080';
 function fillTaskList() {
     getTasks().then(function (tasks) {
         tasks.forEach(function (task) {

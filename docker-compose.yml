@@ -1,0 +1,54 @@
+version: '1'
+services:
+  web:
+    build: 'frontend'
+    depends_on:
+      - backend
+    ports:
+      - 2022:2022
+
+  database:
+    image: 'postgres:latest'
+    restart: always
+    env_file:
+      - database.env
+    volumes:
+      - 'db-data:/var/lib/postgresql/data'
+
+  backend:
+    build: 'backend'
+    restart: always
+    ports:
+      - 8080:8080
+    env_file:
+      - backend.env
+    depends_on:
+      - database
+
+  loadbalancer:
+    image: traefik:v2.9
+    restart: always
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
+      #- './traefik.yml:/etc/traefik/traefik.yml'
+      - './traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml'
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+      - "2022:2022"
+
+#    networks:
+#      - backend
+#      - frontend
+#      - loadbalancer
+
+#networks:
+#  loadbalancer:
+#  frontend:
+#  backend:
+#  database:
+
+volumes:
+  db-data:
+    driver: local

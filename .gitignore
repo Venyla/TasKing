@@ -9,6 +9,7 @@ infrastructure/ssl/*
 .idea/
 .DS_Store
 env-config.js
+pkg/*
 
 # Test binary, built with `go test -c`
 *.test

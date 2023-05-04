@@ -6,7 +6,9 @@ let username = localStorage.getItem("username");
 
 const taskElements = new Map<string, Element>;
 
-const ENDPOINT = 'http://127.0.0.1:8080';
+const ENDPOINT = '/api'; // todo traefik forward to backend
+// old endpoint
+//const ENDPOINT = 'http://127.0.0.1:8080';
 
 function fillTaskList() {
     getTasks().then(tasks => {
