@@ -20,6 +20,9 @@ var (
 func Serve() {
 	server := gin.Default()
 
+	// Used for simpler developing - can be removed later or adjusted only for public api route
+	//server.Use(CORS(), RequestCancelRecover())
+
 	server.Group("/api")
 	{
 		server.GET("/api/tasks", taskController.GetTasks)
@@ -32,7 +35,7 @@ func Serve() {
 		server.POST("/api/history", taskHistoryController.PostTaskHistory)
 	}
 
-	server.Run(":8000")
+	server.Run(":8080")
 }
 
 func RequestCancelRecover() gin.HandlerFunc {
