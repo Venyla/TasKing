@@ -37,6 +37,7 @@ func getAllTasks() *[]datamodels.Task {
 	tasks := new([]datamodels.Task)
 	err := dbConnection.Model(&datamodels.Task{}).
 		Select(tasks)
+
 	if err != nil {
 		return nil
 	}

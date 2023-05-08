@@ -6,7 +6,11 @@
 
 ```
 # Running
-docker compose up -d
+docker compose up --build
+
+# Tear Down
+docker compose down --volumes
+
 ```
 
 ## API
