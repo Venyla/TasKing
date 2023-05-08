@@ -6,8 +6,9 @@ import (
 )
 
 type TaskHistory struct {
-	TaskHistoryId uuid.UUID `json:"id"`
-	TaskId        uuid.UUID `json:"task_id"`
-	CreatedBy     string    `json:"username_of_creator"`
-	CreatedOn     time.Time
+	TaskHistoryId uuid.UUID `pg:"type:uuid,default:gen_random_uuid(),pk" json:"id"`
+	Task          Task      `pg:"rel:has-one,fk:task_id" json:"-"`
+	TaskId        uuid.UUID `pg:"type:uuid" json:"task_id"`
+	CreatedBy     string    `pg:",notnull" json:"username_of_creator"`
+	CreatedOn     time.Time `pg:"default:now(),notnull" json:"-"`
 }

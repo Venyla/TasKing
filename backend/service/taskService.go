@@ -22,7 +22,9 @@ func NewTaskService(taskRepo repositories.TaskRepository) TaskService {
 }
 
 func (service *taskService) GetAllTasks() []datamodels.Task {
-	return *service.taskRepository.GetAll()
+	tasks := service.taskRepository.GetAll()
+
+	return *tasks
 }
 
 func (service *taskService) GetTask(taskId uuid.UUID) datamodels.Task {
