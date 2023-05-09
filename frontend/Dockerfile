@@ -1,17 +1,17 @@
-FROM node:19 as buildenv
+FROM node:20 AS base
 
 WORKDIR /app
+COPY package.json .
+RUN npm install
 
-RUN npm install typescript -g
+FROM base AS build
+
+WORKDIR /app
 COPY . .
+RUN npx tsc || npx sass ./source/default-theme.scss ./source/default-theme.css
 
-# todo convert .ts to .js
-#RUN tsc source/scripts.ts
-
-FROM caddy:2.6
+FROM build AS release
 
 WORKDIR /app
-COPY --from=buildenv /app .
-
-# use --browse to see all files in directory
-CMD caddy file-server --browse --listen :2022
+EXPOSE 2022
+CMD npx http-server . -p 2022
