@@ -10,6 +10,10 @@ infrastructure/ssl/*
 .DS_Store
 env-config.js
 pkg/*
+*.js
+*.js.map
+*.css
+*.css.map
 
 # Test binary, built with `go test -c`
 *.test
@@ -19,3 +23,4 @@ pkg/*
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+*/node_modules/
