@@ -30,13 +30,14 @@ services:
     restart: always
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      #- './traefik.yml:/etc/traefik/traefik.yml'
+      - './traefik.yml:/etc/traefik/traefik.yml'
       - './traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml'
+    command: --providers.docker.exposedbydefault=false --api.insecure=true 
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
       - "443:443/udp"
-      # - "2022:2022"
+    
 
 #    networks:
 #      - backend

@@ -1,28 +1,19 @@
 http:
   routers:
-    dashboard:
-      rule: "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
-      entrypoints:
-        - "web"
-      service: "api@internal"
     myservice:
       rule: "Host(`localhost`)"
-      service: myservice
       entrypoints:
         - "websecure"
+      service: myservice
       tls:
         domains:
           - main: "localhost"
   services:
     myservice:
       loadBalancer:
-        healthcheck:
-          path: "/"
-          interval: "10s"
-          timeout: "1s"
         servers:
-          - url: "http://service1:80"
-          - url: "http://service2:80"
+          - url: "http://web:2022/"
+      
 
 # tls:
 #   certificates:
