@@ -2,10 +2,11 @@ package web
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"webservice/controller"
 	"webservice/data/repositories"
 	"webservice/service"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (

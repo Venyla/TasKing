@@ -3,9 +3,8 @@ services:
   web:
     build: 'frontend'
     depends_on:
-      - backend
-    ports:
-      - 2022:2022
+      - backend1
+      - backend2
 
   database:
     image: 'postgres:latest'
@@ -15,11 +14,16 @@ services:
     volumes:
       - 'db-data:/var/lib/postgresql/data'
 
-  backend:
+  backend1:
     build: 'backend'
     restart: always
-    ports:
-      - 8080:8080
+    env_file:
+      - backend.env
+    depends_on:
+      - database
+  backend2:
+    build: 'backend'
+    restart: always
     env_file:
       - backend.env
     depends_on:
@@ -30,23 +34,13 @@ services:
     restart: always
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      #- './traefik.yml:/etc/traefik/traefik.yml'
+      - './traefik.yml:/etc/traefik/traefik.yml'
       - './traefik_dynamic.yml:/etc/traefik/traefik_dynamic.yml'
+    command: --providers.docker.exposedbydefault=false --api.insecure=true 
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
       - "443:443/udp"
-
-#    networks:
-#      - backend
-#      - frontend
-#      - loadbalancer
-
-#networks:
-#  loadbalancer:
-#  frontend:
-#  backend:
-#  database:
 
 volumes:
   db-data:
