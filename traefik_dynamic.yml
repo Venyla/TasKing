@@ -23,6 +23,9 @@ http:
           - url: "http://web:2022/"
     svcBackend:
       loadBalancer:
+        healthCheck:
+          path: /api/tasks
+          interval: 5s
         servers:
           - url: "http://backend1:8080"
           - url: "http://backend2:8080"
