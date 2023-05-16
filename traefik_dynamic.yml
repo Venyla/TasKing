@@ -1,29 +1,28 @@
 http:
   routers:
     dashboard:
-      rule: "PathPrefix(`/api`) || PathPrefix(`/api/tasks`)"
-      service:  mylbservice
-    myservice:
-      rule: "Host(`localhost`)"
+      rule: "PathPrefix(`/api`)"
+      service:  svcBackend
       entrypoints:
         - "websecure"
-      service: myservice
+      tls:
+        domains:
+          - main: "localhost"
+    myservice:
+      rule: "PathPrefix(`/`)"
+      entrypoints:
+        - "websecure"
+      service: svcfrontend
       tls:
         domains:
           - main: "localhost"
   services:
-    myservice:
+    svcfrontend:
       loadBalancer:
         servers:
           - url: "http://web:2022/"
-    mylbservice:
+    svcBackend:
       loadBalancer:
         servers:
           - url: "http://backend1:8080"
           - url: "http://backend2:8080"
-      
-
-# tls:
-#   certificates:
-#     - certFile: "/etc/traefik/localhost+1.pem"
-#       keyFile: "/etc/traefik/localhost+1-key.pem"

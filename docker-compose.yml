@@ -5,8 +5,6 @@ services:
     depends_on:
       - backend1
       - backend2
-    ports:
-      - 2022:2022
 
   database:
     image: 'postgres:latest'
@@ -19,8 +17,6 @@ services:
   backend1:
     build: 'backend'
     restart: always
-    ports:
-      - 8080:8080
     env_file:
       - backend.env
     depends_on:
@@ -45,18 +41,6 @@ services:
       - 80:80
       - 443:443
       - "443:443/udp"
-    
-
-#    networks:
-#      - backend
-#      - frontend
-#      - loadbalancer
-
-#networks:
-#  loadbalancer:
-#  frontend:
-#  backend:
-#  database:
 
 volumes:
   db-data:
