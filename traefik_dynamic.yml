@@ -1,5 +1,8 @@
 http:
   routers:
+    dashboard:
+      rule: "PathPrefix(`/api`) || PathPrefix(`/api/tasks`)"
+      service:  mylbservice
     myservice:
       rule: "Host(`localhost`)"
       entrypoints:
@@ -13,6 +16,11 @@ http:
       loadBalancer:
         servers:
           - url: "http://web:2022/"
+    mylbservice:
+      loadBalancer:
+        servers:
+          - url: "http://backend1:8080"
+          - url: "http://backend2:8080"
       
 
 # tls:

@@ -3,7 +3,8 @@ services:
   web:
     build: 'frontend'
     depends_on:
-      - backend
+      - backend1
+      - backend2
     ports:
       - 2022:2022
 
@@ -15,11 +16,18 @@ services:
     volumes:
       - 'db-data:/var/lib/postgresql/data'
 
-  backend:
+  backend1:
     build: 'backend'
     restart: always
     ports:
       - 8080:8080
+    env_file:
+      - backend.env
+    depends_on:
+      - database
+  backend2:
+    build: 'backend'
+    restart: always
     env_file:
       - backend.env
     depends_on:
