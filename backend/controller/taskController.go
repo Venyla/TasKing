@@ -11,7 +11,6 @@ import (
 type TaskController interface {
 	GetTasks(context *gin.Context)
 	GetTaskById(context *gin.Context)
-	//PostTask(context *gin.Context)
 }
 
 type taskController struct {
