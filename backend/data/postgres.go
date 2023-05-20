@@ -101,7 +101,5 @@ func createSchema() error {
 	transaction.Commit()
 	fmt.Println("DB created!")
 
-	// TODO maybe do a health check
-
 	return nil
 }

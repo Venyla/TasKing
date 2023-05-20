@@ -11,7 +11,6 @@ import (
 type TaskController interface {
 	GetTasks(context *gin.Context)
 	GetTaskById(context *gin.Context)
-	//PostTask(context *gin.Context)
 }
 
 type taskController struct {
@@ -31,17 +30,5 @@ func (c *taskController) GetTasks(context *gin.Context) {
 
 func (c *taskController) GetTaskById(context *gin.Context) {
 	id := uuid.Must(uuid.Parse(context.Param("id")))
-
 	context.IndentedJSON(http.StatusOK, c.taskService.GetTask(id))
 }
-
-//func (c *taskController) PostTask(context *gin.Context) {
-//	var newTask data.Task
-//
-//	if err := context.BindJSON(&newTask); err != nil {
-//		return
-//	}
-//
-//	tasks = append(tasks, newTask)
-//	context.IndentedJSON(http.StatusCreated, newTask)
-//}

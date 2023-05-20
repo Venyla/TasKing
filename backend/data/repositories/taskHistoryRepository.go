@@ -49,21 +49,24 @@ func (r TaskHistoryRepository) Insert(taskId uuid.UUID, userName string) *datamo
 	}
 
 	taskHistoryId := uuid.New()
-	_, creationError := dbConnection.Model(&datamodels.TaskHistory{
+	taskHistory := datamodels.TaskHistory{
 		TaskHistoryId: taskHistoryId,
+		TaskId:        taskId,
 		CreatedBy:     userName,
-		CreatedOn:     time.Now().UTC(),
-	}).Insert()
+		CreatedOn:     time.Now(),
+	}
+
+	_, creationError := dbConnection.Model(&taskHistory).Insert()
 
 	if creationError != nil {
 		transaction.Rollback()
 		panic(creationError)
 	}
 
-	taskHistory := &datamodels.TaskHistory{}
-	findError := dbConnection.Model(taskHistory).
-		Where("TaskHistoryId = ?", taskHistoryId).
-		Select()
+	insertedTaskHistory := new(datamodels.TaskHistory)
+	findError := dbConnection.Model(&datamodels.TaskHistory{}).
+		Where("task_history_id = ?", taskHistoryId).
+		Select(insertedTaskHistory)
 
 	if findError != nil {
 		transaction.Rollback()
@@ -72,5 +75,5 @@ func (r TaskHistoryRepository) Insert(taskId uuid.UUID, userName string) *datamo
 
 	transaction.Commit()
 
-	return taskHistory
+	return insertedTaskHistory
 }

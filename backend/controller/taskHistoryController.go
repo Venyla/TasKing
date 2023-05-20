@@ -8,14 +8,6 @@ import (
 	"webservice/service"
 )
 
-//var taskHistories = []data.TaskHistory{
-//	{TaskHistoryId: uuid.New(), TaskId: uuid.MustParse("db9c48a8-f491-4120-a11f-21ec27335c2a"), CreatedBy: "Vina"},
-//	{TaskHistoryId: uuid.New(), TaskId: uuid.MustParse("db9c48a8-f491-4120-a11f-21ec27335c2a"), CreatedBy: "Vina"},
-//	{TaskHistoryId: uuid.New(), TaskId: uuid.MustParse("db9c48a8-f491-4120-a11f-21ec27335c2a"), CreatedBy: "Vanessa"},
-//	{TaskHistoryId: uuid.New(), TaskId: uuid.MustParse("a3958663-e7c4-4b19-a43b-b3a06fec33b5"), CreatedBy: "Vanessa"},
-//	{TaskHistoryId: uuid.New(), TaskId: uuid.MustParse("a3958663-e7c4-4b19-a43b-b3a06fec33b5"), CreatedBy: "Lukas"},
-//}
-
 type TaskHistoryController interface {
 	GetTaskHistories(context *gin.Context)
 	GetTaskHistoryByTaskId(context *gin.Context)
@@ -40,13 +32,6 @@ func (c *taskHistoryController) GetTaskHistories(context *gin.Context) {
 
 func (c *taskHistoryController) GetTaskHistoryByTaskId(context *gin.Context) {
 	id := uuid.Must(uuid.Parse(context.Param("id")))
-	//historyOfTask := list.New()
-	//
-	//for _, h := range taskHistories {
-	//	if h.TaskId == id {
-	//		historyOfTask.PushFront(h)
-	//	}
-	//}
 
 	context.IndentedJSON(http.StatusOK, c.taskHistoryService.GetTaskHistoryByTaskId(id))
 }
@@ -58,11 +43,9 @@ func (c *taskHistoryController) PostTaskHistory(context *gin.Context) {
 		return
 	}
 
-	//taskHistories = append(taskHistories, newTaskHistory)
+	insertedtaskHistory := c.taskHistoryService.InsertTaskHistory(newTaskHistory.TaskId, newTaskHistory.CreatedBy)
 
-	taskHistory := c.taskHistoryService.InsertTaskHistory(newTaskHistory.TaskId, newTaskHistory.CreatedBy)
-
-	context.IndentedJSON(http.StatusCreated, taskHistory)
+	context.IndentedJSON(http.StatusCreated, insertedtaskHistory)
 }
 
 func (c *taskHistoryController) GetRankingsByTaskId(context *gin.Context) {
@@ -82,21 +65,3 @@ func (c *taskHistoryController) GetRankingsByTaskId(context *gin.Context) {
 
 	context.IndentedJSON(http.StatusOK, rankings)
 }
-
-//func getRankings(taskId uuid.UUID) map[string]int {
-//	var rankings = make(map[string]int)
-//
-//	for _, h := range taskHistories {
-//
-//		if h.TaskId == taskId {
-//			amount, exists := rankings[h.CreatedBy]
-//			if exists {
-//				rankings[h.CreatedBy] = amount + 1
-//			} else {
-//				rankings[h.CreatedBy] = 1
-//			}
-//		}
-//	}
-//
-//	return rankings
-//}
