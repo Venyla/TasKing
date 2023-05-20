@@ -73,7 +73,7 @@ function updateRankings() {
 }
 
 async function getRankings(id: string) {
-    const response = await fetch(`${ENDPOINT}/api/tasks/${id}/rankings`);
+    const response = await fetch(`${ENDPOINT}/tasks/${id}/rankings`);
     const endpointRankings = await response.json();
     const rankings: Ranking[] = Object.keys(endpointRankings).map(value => {
         return {
@@ -120,7 +120,7 @@ function updateKingStatus(id: string, myCount: number, maxCount: number) {
 }
 
 async function getTasks(): Promise<Task[]> {
-    const response = await fetch(ENDPOINT + '/api/tasks');
+    const response = await fetch(ENDPOINT + '/tasks');
     return response.json();
 }
 
@@ -135,7 +135,7 @@ async function postHistory(id: string) {
         task_id: id,
         username_of_creator: username,
     }
-    const response = await fetch(`${ENDPOINT}/api/history`, {
+    const response = await fetch(`${ENDPOINT}/history`, {
         method: 'POST',
         body: JSON.stringify(data),
     });
