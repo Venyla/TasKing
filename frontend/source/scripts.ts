@@ -3,12 +3,9 @@ const usernameDisplay = document.querySelector('#username-display')
 const usernameModal = document.querySelector('.username-modal')
 const taskList = document.querySelector('.tasks');
 let username = localStorage.getItem("username");
-
 const taskElements = new Map<string, Element>;
 
-const ENDPOINT = '/api'; // todo traefik forward to backend
-// old endpoint
-//const ENDPOINT = 'http://127.0.0.1:8080';
+const ENDPOINT = '/api';
 
 function fillTaskList() {
     getTasks().then(tasks => {
@@ -50,7 +47,7 @@ function saveUsername(){
 }
 
 function initUglyPolling() {
-    // setInterval(updateRankings,5000);
+    setInterval(updateRankings, 5000);
 }
 
 fillTaskList();
@@ -62,7 +59,6 @@ function updateMyCount(id: string) {
         updateRanking(id)
     );
 }
-
 
 function updateRankings() {
     getTasks().then(tasks => {
@@ -100,7 +96,6 @@ function updateRankingDisplay(id: string, myCount: number, maxCount: number, ran
 }
 
 async function updateRanking(id: string) {
-
     const rankings = await getRankings(id);
     const myRanking = rankings.find(value => value.username_of_creator === username);
 
@@ -120,7 +115,7 @@ function updateKingStatus(id: string, myCount: number, maxCount: number) {
 }
 
 async function getTasks(): Promise<Task[]> {
-    const response = await fetch(ENDPOINT + '/tasks');
+    const response = await fetch(`${ENDPOINT}/tasks`);
     return response.json();
 }
 
@@ -135,7 +130,7 @@ async function postHistory(id: string) {
         task_id: id,
         username_of_creator: username,
     }
-    const response = await fetch(`${ENDPOINT}/history`, {
+    await fetch(`${ENDPOINT}/history`, {
         method: 'POST',
         body: JSON.stringify(data),
     });
@@ -158,4 +153,3 @@ interface Ranking {
     username_of_creator: string,
     amount: number,
 }
-
