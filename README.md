@@ -21,7 +21,13 @@ Both the `scripts.ts` and `default-theme.scss` are compiled/transpiled using npm
 TODO: Insert Text
 
 ### Load Balancer
-TODO: Insert Text
+
+The load balancer has the open ports HTTP `80` and HTTPS `443`. The HTTP port will be redirected to HTTPS automatically. Because this runs only on one client and simplify reasons, an certificate is not implemented. Therefore, a certificate error will be displayed. A certificate could be implemented in the future.
+The service which runs on the port `443` is with HTTP/3 configured. Afterwards the traffic will be forward to the frontend with the port `2022`.
+The fronted gets the data by do request with the prefix `/api`, the load balancer routes all traffic with this prefix to the backend service. The backend service contains two backend containers, the service translates the traffic to the port `8080`.
+
+The backend service includes a health check to determine if the backend containers still running and in the heathy state. If a container fails it takes up to 10s to route all traffic to the healthy one.
+
 
 ## Usage
 ### Running Locally
