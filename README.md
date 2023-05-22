@@ -18,7 +18,11 @@ Since no framework like Vue, React, etc. was used, all logic is located in the `
 Both the `scripts.ts` and `default-theme.scss` are compiled/transpiled using npm, both locally and within the Dockerfile.
 
 ### Backend
-TODO: Insert Text
+The backend is written in go and is designed to be able to expandable easily. 
+On startup the `posgres.go` will run which creates a database and some tasks to get started.
+The data models for the database tables can be found in `/data/datamodels` and tables are created according to these models using [ORM](https://gorm.io/). 
+A simple api will run, all endpoints are configured in the `serve.go` file. 
+If the data returned form the API should look different from data models, web models could be created in `/service/webModels` (folder does currently not exist) and be returned instead.
 
 ### Load Balancer
 **Technologies:** Traefik
