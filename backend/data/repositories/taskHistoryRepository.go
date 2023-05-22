@@ -29,7 +29,8 @@ func (r TaskHistoryRepository) FindTaskHistoryByTaskId(taskId uuid.UUID) *[]data
 
 	taskHistories := new([]datamodels.TaskHistory)
 
-	err := dbConnection.Model(&datamodels.TaskHistory{TaskId: taskId}).
+	err := dbConnection.Model(&datamodels.TaskHistory{}).
+		Where("task_id = ?", taskId).
 		Select(taskHistories)
 
 	if err != nil {
